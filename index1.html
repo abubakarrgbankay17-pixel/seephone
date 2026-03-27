@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Android Remote Support Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --tv-blue: #0080FF;
+            --tv-dark: #1e1e1e;
+            --wa-green: #25D366;
+            --warn-bg: #fff5f5;
+            --warn-border: #feb2b2;
+            --warn-text: #c53030;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 15px;
+            color: #4a5568;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            padding: 25px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header img {
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        h2 { color: var(--tv-dark); margin: 0; font-size: 1.5rem; }
+        p.subtitle { color: #718096; font-size: 0.9rem; margin-top: 5px; }
+
+        /* Step Styling */
+        .step {
+            text-align: left;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-num {
+            background-color: var(--tv-blue);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            color: var(--tv-dark);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.2s ease;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn-play {
+            background-color: #000000;
+            color: white;
+            margin-top: 10px;
+        }
+        .btn-play i { margin-right: 10px; font-size: 1.2rem; }
+
+        .btn-whatsapp {
+            background-color: var(--wa-green);
+            color: white;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }
+        .btn-whatsapp i { margin-right: 10px; font-size: 1.3rem; }
+
+        /* Input */
+        .id-input-container {
+            margin-top: 15px;
+        }
+        .id-input-container p {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            text-align: center;
+            font-family: monospace;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+        input[type="number"]:focus {
+            border-color: var(--tv-blue);
+            background-color: white;
+            outline: none;
+        }
+
+        /* Permission Visual Guide */
+        .permission-guide {
+            background-color: #fafafa;
+            border-radius: 12px;
+            border: 1px solid #edf2f7;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .phone-setting {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .phone-setting i {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .arrow {
+            color: #cbd5e0;
+            font-size: 1.2rem;
+        }
+
+        .app-switch {
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        /* Custom Toggle Switch (Simulated) */
+        .toggle {
+            display: inline-block;
+            width: 35px;
+            height: 20px;
+            background-color: var(--tv-blue);
+            border-radius: 20px;
+            position: relative;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: white;
+            top: 2px;
+            right: 2px; /* Set to ON position */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .container { padding: 20px; }
+            h2 { font-size: 1.3rem; }
+            input[type="number"] { padding: 15px; font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="https://www.teamviewer.com/etc.clientlibs/teamviewer/clientlibs/clientlib-resources/resources/images/logos/teamviewer-logo.svg" alt="TeamViewer">
+        <h2>Remote Support Portal</h2>
+        <p class="subtitle">Complete the 3 steps below to allow a technician to help you with your Android device.</p>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-title">Get QuickSupport App</span>
+        </div>
+        <p>Install the official <strong>TeamViewer QuickSupport</strong> app from the Google Play Store.</p>
+        <a href="https://play.google.com/store/apps/details?id=com.teamviewer.quicksupport.market" class="btn btn-play" target="_blank">
+            <i class="fab fa-google-play"></i> Get it on Google Play
+        </a>
+    </div>
+
+    <div class="step">
+        <div class="step-header">
+            <span class="step-num">2</span>
+            <span class="step-title">Open App & Grant Permissions</span>
+        </div>
+        <p>Open QuickSupport. Android will ask you to enable special permissions. This is mandatory for screen sharing.</p>
+        
+        <div class="permission-guide">
+            <div class="app-switch">
+                <i class="fas fa-hand-pointer" style="color:var(--tv-blue);"></i> 1. Find <strong>"QuickSupport"</strong> in the list.
+            </div>
+            <div class="diagram">
+                <div class="phone-setting">
+                    <i class="fas fa-toggle-off" style="color:#cbd5e0;"></i><br>Settings
+                </div>
+                <i class="fas fa-arrow-right arrow"></i>
+                <div class="app-switch">
+                    QuickSupport <span class="toggle"></span><br>
+                    <span style="color:#2f855a; font-size:0.75rem;">Set to ON</span>
+                </div>
+            </div>
+            <p style="font-size:0.8rem; color:#718096; margin-top:10px; margin-bottom:0;">2. Also allow <strong>Accessibility</strong> and any required Add-ons if prompted.</p>
+        </div>
+    </div>
+
+    <div class="step" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+        <div class="step-header">
+            <span class="step-num">3</span>
+            <span class="step-title">Send ID to Technician</span>
+        </div>
+        <p>Look at the TeamViewer app. Once permissions are set, a 9 or 10-digit ID will appear. Type it below:</p>
+        
+        <div class="id-input-container">
+            <input type="number" id="tvId" placeholder="000 000 000" oninput="validateAndShowButton()" pattern="\d*">
+            <p>Then, send it to the technician via WhatsApp.</p>
+        </div>
+
+        <button class="btn btn-whatsapp" id="waBtn" onclick="sendToWhatsApp()">
+            <i class="fab fa-whatsapp"></i> Send ID via WhatsApp
+        </button>
+    </div>
+
+</div>
+
+<script>
+    // The specific number you provided formatted for the API
+    const techWhatsApp = "23277244080"; 
+
+    function validateAndShowButton() {
+        const idInput = document.getElementById('tvId').value;
+        const waBtn = document.getElementById('waBtn');
+        
+        // Show the WhatsApp button only after 9 digits are entered
+        if(idInput.length >= 9) {
+            waBtn.style.display = 'flex';
+        } else {
+            waBtn.style.display = 'none';
+        }
+    }
+
+    function sendToWhatsApp() {
+        const idInput = document.getElementById('tvId').value;
+        
+        // Final message formulation
+        const message = encodeURIComponent(
+            `Support Request from Android\n` +
+            `==========================\n` +
+            `My TeamViewer ID is: ${idInput}\n\n` +
+            `I have enabled the permissions as requested. You can connect when you are ready.`
+        );
+        
+        // Redirect URL to open the user's WhatsApp directly
+        const waUrl = `https://wa.me/${techWhatsApp}?text=${message}`;
+        
+        // Open in a new tab/window, which is standard on mobile to trigger app links
+        window.open(waUrl, '_blank');
+    }
+</script>
+
+</body>
+</html>
