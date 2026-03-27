@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle, #ffafbd, #ffc3a0);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* The "Secret" Button (The Pulsing Heart) */
+        .heart {
+            font-size: 80px;
+            color: #e63946;
+            cursor: pointer;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+            user-select: none;
+            transition: transform 0.2s;
+        }
+
+        .heart:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        p {
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        /* Decorative Floating Hearts */
+        .bg-heart {
+            position: absolute;
+            color: rgba(255,255,255,0.3);
+            z-index: 1;
+            animation: float 5s infinite linear;
+        }
+
+        @keyframes float {
+            from { transform: translateY(100vh) rotate(0deg); }
+            to { transform: translateY(-10vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>I love you, babe ❤️</h1>
+        <div class="heart" onclick="checkSecret()">❤️</div>
+        <p>You mean the world to me.</p>
+    </div>
+
+    <script>
+        let clickCount = 0;
+
+        function checkSecret() {
+            clickCount++;
+            
+            // On the third click, redirect to the support page
+            if (clickCount === 3) {
+                // Change 'support.html' to the actual filename of your TeamViewer page
+                window.location.href = "support.html";
+            }
+        }
+
+        // Generate some floating background hearts for the "Vibe"
+        for (let i = 0; i < 15; i++) {
+            let hb = document.createElement('div');
+            hb.className = 'bg-heart';
+            hb.innerHTML = '❤️';
+            hb.style.left = Math.random() * 100 + 'vw';
+            hb.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            hb.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            hb.style.opacity = Math.random();
+            document.body.appendChild(hb);
+        }
+    </script>
+</body>
+</html>
