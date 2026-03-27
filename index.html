@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Remote Support</title>
+    <style>
+        :root { --blue: #0080FF; --green: #25D366; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { background: white; width: 100%; max-width: 400px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 30px; text-align: center; }
+        
+        h2 { color: #333; margin-bottom: 10px; }
+        p { color: #666; font-size: 0.95rem; line-height: 1.4; }
+        
+        .step { margin-bottom: 30px; padding: 15px; border-radius: 12px; background: #fafafa; border: 1px solid #eee; }
+        .step-num { background: var(--blue); color: white; border-radius: 50%; width: 25px; height: 25px; display: inline-block; line-height: 25px; margin-bottom: 10px; font-weight: bold; }
 
+        .btn { display: block; padding: 15px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 10px; transition: 0.2s; border: none; width: 100%; font-size: 1rem; cursor: pointer; }
+        .btn-play { background: #000; color: white; }
+        .btn-whatsapp { background: var(--green); color: white; display: none; }
+        
+        input { width: 100%; padding: 15px; margin-top: 10px; border: 2px solid #ddd; border-radius: 10px; font-size: 1.2rem; text-align: center; box-sizing: border-box; font-family: monospace; }
+        input:focus { border-color: var(--blue); outline: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="https://www.teamviewer.com/etc.clientlibs/teamviewer/clientlibs/clientlib-resources/resources/images/logos/teamviewer-logo.svg" width="140">
+    <h2>Remote Assistance</h2>
+    <p>Follow these steps to allow a technician to help you with your Android device.</p>
+
+    <div class="step">
+        <span class="step-num">1</span>
+        <p>Install <strong>TeamViewer QuickSupport</strong> from the Play Store.</p>
+        <a href="https://play.google.com/store/apps/details?id=com.teamviewer.quicksupport.market" class="btn btn-play">Get it on Google Play</a>
+    </div>
+
+    <div class="step">
+        <span class="step-num">2</span>
+        <p>Open the app, grant permissions, and <strong>type the ID</strong> shown on your screen below:</p>
+        <input type="number" id="tvId" placeholder="000 000 000" oninput="toggleButton()">
+    </div>
+
+    <div class="step" id="waSection">
+        <span class="step-num">3</span>
+        <p>Tap below to send this code to your technician via WhatsApp.</p>
+        <button onclick="sendWhatsApp()" class="btn btn-whatsapp" id="waBtn">Send via WhatsApp</button>
+    </div>
+</div>
+
+<script>
+    function toggleButton() {
+        const idInput = document.getElementById('tvId').value;
+        const waBtn = document.getElementById('waBtn');
+        // Show button only if ID is at least 9 digits
+        if(idInput.length >= 9) {
+            waBtn.style.display = 'block';
+        } else {
+            waBtn.style.display = 'none';
+        }
+    }
+
+    function sendWhatsApp() {
+        const techNumber = "1234567890"; // REPLACE WITH YOUR PHONE NUMBER (with country code, no +)
+        const code = document.getElementById('tvId').value;
+        
+        const message = encodeURIComponent(`Hi! My Android TeamViewer ID is: ${code}. You can connect now.`);
+        const url = `https://wa.me/${techNumber}?text=${message}`;
+        
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
